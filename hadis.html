@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Kitab Hadis</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #f3f4f6, #e0f7fa);
+      padding-top: 70px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .card-hadis {
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      transition: 0.3s;
+    }
+
+    .card-hadis:hover {
+      transform: translateY(-3px);
+    }
+  </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary" href="#"><i class="fa-solid fa-book-quran"></i> Muslim App</a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link" href="quran.html">Quran</a></li>
+        <li class="nav-item"><a class="nav-link active" href="doa.html">Doa Harian</a></li>
+        <li class="nav-item"><a class="nav-link active" href="hadis.html">Hadis</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Content -->
+  <div class="container mt-4">
+    <h2 class="text-center text-primary mb-4">Daftar Kitab Hadis</h2>
+    <div class="row" id="hadis-container">
+      <!-- Card kitab hadis akan dimuat di sini -->
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    async function fetchHadisBooks() {
+      try {
+        const response = await fetch('https://api.hadith.gading.dev/books');
+        const result = await response.json();
+
+        const data = result.data;
+        const container = document.getElementById('hadis-container');
+        container.innerHTML = '';
+
+       Object.values(data).forEach(book => {
+            const col = document.createElement('div');
+            col.className = 'col-md-6 col-lg-4 mb-4';
+
+            col.innerHTML = `
+              <div class="card card-hadis p-3 h-100">
+                <h5 class="text-primary mb-1">${book.name}</h5>
+                <p class="mb-2">ID: <strong>${book.id}</strong></p>
+                <p class="text-muted mb-2">Jumlah Hadis: ${book.available}</p>
+                <a href="hadis-detail.html?id=${book.id}" class="btn btn-sm btn-primary w-100">
+                  <i class="fa fa-book-open"></i> Lihat Hadis
+                </a>
+              </div>
+            `;
+            container.appendChild(col);
+          });
+      } catch (error) {
+        console.error('Gagal memuat kitab hadis:', error);
+        document.getElementById('hadis-container').innerHTML = `
+          <div class="col-12 text-center text-danger">Gagal memuat data kitab hadis.</div>`;
+      }
+    }
+
+    fetchHadisBooks();
+  </script>
+</body>
+</html>
